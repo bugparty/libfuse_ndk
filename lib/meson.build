@@ -13,7 +13,7 @@ endif
 deps = [ thread_dep ]
 if cfg.get('HAVE_ICONV')
    libfuse_sources += [ 'modules/iconv.c' ]
-   libiconv = cc.find_library('iconv', required: false)
+   libiconv = cc.find_library('iconv', required: true)
    if libiconv.found()
       deps += [ libiconv ]
    endif
@@ -29,7 +29,7 @@ if host_machine.system().startswith('netbsd')
              cc.find_library('puffs') ]
 else
    # Required for clock_gettime before glibc 2.17
-   deps += cc.find_library('rt')
+   # deps += cc.find_library('rt')
 endif
 
 fusermount_path = join_paths(get_option('prefix'), get_option('bindir'))
@@ -41,7 +41,14 @@ libfuse = library('fuse3', libfuse_sources, version: meson.project_version(),
                             '-DFUSERMOUNT_DIR="@0@"'.format(fusermount_path) ],
                   link_args: ['-Wl,--version-script,' + meson.current_source_dir()
                               + '/fuse_versionscript' ])
-
+libfuse_a = static_library('fuse3', libfuse_sources,
+                   include_directories: include_dirs,
+                  dependencies: deps, install: true,
+                  link_depends: 'fuse_versionscript',
+                  c_args: [ '-DFUSE_USE_VERSION=35',
+                            '-DFUSERMOUNT_DIR="@0@"'.format(fusermount_path) ],
+                  link_args: ['-Wl,--version-script,' + meson.current_source_dir()
+                              + '/fuse_versionscript' ])
 pkg = import('pkgconfig')
 pkg.generate(libraries: [ libfuse, '-lpthread' ],
              libraries_private: '-ldl',
@@ -51,4 +58,4 @@ pkg.generate(libraries: [ libfuse, '-lpthread' ],
              subdirs: 'fuse3')
 
 libfuse_dep = declare_dependency(include_directories: include_dirs,
-                                 link_with: libfuse, dependencies: deps)
+                                 link_with: libfuse_a, dependencies: deps)

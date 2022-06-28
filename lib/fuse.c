@@ -197,7 +197,7 @@ struct fuse_context_i {
 
 /* Defined by FUSE_REGISTER_MODULE() in lib/modules/subdir.c and iconv.c.  */
 extern fuse_module_factory_t fuse_module_subdir_factory;
-#ifdef HAVE_ICONV
+#ifdef HAVE_ICONV2
 extern fuse_module_factory_t fuse_module_iconv_factory;
 #endif
 
@@ -4722,7 +4722,7 @@ void fuse_lib_help(struct fuse_args *args)
 
 	/* Print help for builtin modules */
 	print_module_help("subdir", &fuse_module_subdir_factory);
-#ifdef HAVE_ICONV
+#ifdef HAVE_ICONV2
 	print_module_help("iconv", &fuse_module_iconv_factory);
 #endif
 
@@ -4907,7 +4907,7 @@ struct fuse *fuse_new_31(struct fuse_args *args,
 	if (builtin_modules_registered == 0) {
 		/* If not, register them. */
 		fuse_register_module("subdir", fuse_module_subdir_factory, NULL);
-#ifdef HAVE_ICONV
+#ifdef HAVE_ICONV2
 		fuse_register_module("iconv", fuse_module_iconv_factory, NULL);
 #endif
 		builtin_modules_registered= 1;

@@ -1,0 +1,32 @@
+#!/bin/bash
+export PKG_CONFIG_PATH=/home/bowman/ffmpeg_build/dist/lib/pkgconfig
+export C_INCLUDE_PATH=/home/bowman/ffmpeg_build/dist/include
+export LD_LIBRARY_PATH=/home/bowman/ffmpeg_build/dist/lib
+export PKG_CONFIG_LIBDIR=/home/bowman/ffmpeg_build/dist/lib
+export INSTALL_DIR=/home/bowman/ffmpeg_build/dist
+export ANDROID_SDK_HOME=/mnt/aosp/Android/Sdk
+export ANDROID_NDK_HOME=/mnt/aosp/Android/Sdk/ndk/24.0.8215888
+export TOOLCHAIN=$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64
+export SYSROOT_PATH=${TOOLCHAIN}/sysroot
+export TARGET=aarch64-linux-android
+export TARGET_TRIPLE_MACHINE_ARCH=aarch64
+export ANDROID_ABI="arm64-v8a"
+export API=23
+export HOST_NPROC=$(nproc)
+export CPU_FAMILY=${TARGET_TRIPLE_MACHINE_ARCH}
+
+export AR=$TOOLCHAIN/bin/llvm-ar
+export CC=$TOOLCHAIN/bin/$TARGET$API-clang
+export AS=$CC
+export CXX=$TOOLCHAIN/bin/$TARGET$API-clang++
+export LD=$TOOLCHAIN/bin/ld
+export RANLIB=$TOOLCHAIN/bin/llvm-ranlib
+export STRIP=$TOOLCHAIN/bin/llvm-strip
+# Using Build machine's Ninja. It is used for libdav1d building. Needs to be installed
+export NINJA_EXECUTABLE=$(which ninja)
+# A utility to properly pick shared libraries by FFmpeg's configure script. Needs to be installed
+export PKG_CONFIG_EXECUTABLE=$(which pkg-config)
+# Nasm is used for libdav1d and libx264 building. Needs to be installed
+export NASM_EXECUTABLE=$(which nasm)
+# Meson is used for libdav1d building. Needs to be installed
+export MESON_EXECUTABLE=$(which meson)
